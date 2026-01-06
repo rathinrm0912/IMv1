@@ -1,23 +1,28 @@
-import firebase_admin
-from firebase_admin import credentials, firestore, auth
-import os
-from pathlib import Path
+// Import Firebase SDKs
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-# Initialize Firebase Admin SDK
-# For production, use service account JSON
-# For now, we'll use the web config and initialize without credentials for Firestore
-try:
-    firebase_app = firebase_admin.get_app()
-except ValueError:
-    # Initialize with minimal config - Firestore will connect via Firebase Web SDK
-    firebase_app = firebase_admin.initialize_app(options={
-        'projectId': 'im-b169f'
-    })
+// Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAUIbaz0U4nYl5b6mRrB3Iitd3MhfunEfA",
+  authDomain: "im-b169f.firebaseapp.com",
+  projectId: "im-b169f",
+  storageBucket: "im-b169f.firebasestorage.app",
+  messagingSenderId: "674696535188",
+  appId: "1:674696535188:web:135799dea0cd25f5bee881",
+  measurementId: "G-EHNHB5ZW5V"
+};
 
-db = firestore.client()
+// Initialize Firebase
+export const app = initializeApp(firebaseConfig);
+export const analytics = getAnalytics(app);
+export const db = getFirestore(app);
+export const auth = getAuth(app);
 
-# Collections
-USERS_COLLECTION = 'users'
-DOCUMENTS_COLLECTION = 'documents'
-COMMENTS_COLLECTION = 'comments'
-NOTIFICATIONS_COLLECTION = 'notifications'
+// Collections (same naming as Python)
+export const USERS_COLLECTION = "users";
+export const DOCUMENTS_COLLECTION = "documents";
+export const COMMENTS_COLLECTION = "comments";
+export const NOTIFICATIONS_COLLECTION = "notifications";

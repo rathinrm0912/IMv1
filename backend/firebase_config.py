@@ -1,28 +1,27 @@
-// Import Firebase SDKs
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import firebase_admin
+from firebase_admin import credentials, firestore
+import os
+import json
 
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAUIbaz0U4nYl5b6mRrB3Iitd3MhfunEfA",
-  authDomain: "im-b169f.firebaseapp.com",
-  projectId: "im-b169f",
-  storageBucket: "im-b169f.firebasestorage.app",
-  messagingSenderId: "674696535188",
-  appId: "1:674696535188:web:135799dea0cd25f5bee881",
-  measurementId: "G-EHNHB5ZW5V"
-};
+# Initialize Firebase Admin
+# You will need to add a 'FIREBASE_SERVICE_ACCOUNT' environment variable in Netlify/Vercel
+service_account_info = os.environ.get('FIREBASE_SERVICE_ACCOUNT')
 
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+if service_account_info:
+    # Parse the JSON string from environment variable
+    cert_dict = json.loads(service_account_info)
+    cred = credentials.Certificate(cert_dict)
+    firebase_admin.initialize_app(cred)
+else:
+    # Fallback for local development if you have the file locally
+    # cred = credentials.Certificate("path/to/serviceAccountKey.json")
+    # firebase_admin.initialize_app(cred)
+    print("Warning: FIREBASE_SERVICE_ACCOUNT not found in environment")
 
-// Collections (same naming as Python)
-export const USERS_COLLECTION = "users";
-export const DOCUMENTS_COLLECTION = "documents";
-export const COMMENTS_COLLECTION = "comments";
-export const NOTIFICATIONS_COLLECTION = "notifications";
+db = firestore.client()
+
+# Collection names used in server.py
+USERS_COLLECTION = "users"
+DOCUMENTS_COLLECTION = "documents"
+COMMENTS_COLLECTION = "comments"
+NOTIFICATIONS_COLLECTION = "notifications"
